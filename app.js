@@ -2,9 +2,19 @@ const express = require("express");
 const app = express();
 const port = 8000;
 
+function isAuthorized(req, res, next) {
+  const auth = req.headers.authorization;
+  if (auth === 'secretpassword') {
+    next();
+  } else {
+    res.status(401);
+    res.send('Not permitted');
+  }
+}
+
 app.get("/", (req, res) => res.send("Hello Ghana!"));
 
-app.get("/products", (req,res) => {
+app.get("/products",isAuthorized, (req,res) => {
     const products = [
     {
       id: 1,
